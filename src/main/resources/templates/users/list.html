@@ -1,36 +1,45 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-<meta charset="UTF-8">
-<title>Thymeleaf in action</title>
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="~{fragments/header :: header}">
+
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
-<h3 th:text="${userModel.title}">flysun55</h3>
-<div>
-<a href="/users/form.html" th:href="@{/users/form}">创建用户</a>
+
+<!--  content -->
+<div class="container">
+
+	<h3 th:text="${userModel.title}">flysun55</h3>
+	<div class="btn btn-default">
+		<a href="/users/form.html" th:href="@{/users/form}">创建用户</a>
+	</div>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<td>ID</td>
+				<td>Email</td>
+				<td>Name</td>
+
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${userModel.userList.size()} eq 0">
+				<td colspan="3">记录不存在</td>
+			</tr>
+			<tr th:each="user : ${userModel.userList}">
+				<td th:text="${user.id}"></td>
+				<td th:text="${user.email}"></td>
+				<td><a th:href="@{'/users/'+${user.id}}"
+					th:text="${user.name}"></a></td>
+			</tr>
+		</tbody>
+	</table>
+	
 </div>
-<table border="1">
-  <thead>
-    <tr>
-     <td>ID</td>
-     <td>Email</td>
-     <td>Name</td>
-     
-    </tr>
-  </thead>
-  <tbody>
-    <tr th:if="${userModel.userList.size()} eq 0">
-       <td colspan="3">记录不存在</td>
-    </tr>
-    <tr th:each="user : ${userModel.userList}">
-     <td th:text="${user.id}"></td>
-     <td th:text="${user.email}"></td>
-     <td><a th:href="@{'/users/'+${user.id}}" th:text="${user.name}"></a></td>
-    </tr>
-  </tbody>
-</table>
+<!-- /.container -->
+
+
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

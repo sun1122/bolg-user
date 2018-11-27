@@ -1,5 +1,8 @@
 package com.zzu.spring.boot.blog.controller;
 
+import javax.annotation.Resource;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +26,8 @@ import com.zzu.spring.boot.blog.repository.UserRepository;
 @RequestMapping("/users")
 public class UserController {
 	
-	@Autowired
+	//@Autowired
+	@Resource
 	private UserRepository userRepository;
 
 	/**
@@ -35,7 +39,7 @@ public class UserController {
 	// @RequestMapping(method=RequestMethod.GET)
 	@GetMapping
 	public ModelAndView listUser(Model mo) {
-		mo.addAttribute("userList", userRepository.listUser());
+		mo.addAttribute("userList", userRepository.findAll());
 		mo.addAttribute("title", "用户管理");
 		return new ModelAndView("users/list", "userModel", mo);
 	}
@@ -49,7 +53,7 @@ public class UserController {
 	 */
 	@GetMapping("{id}")
 	public ModelAndView view(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("user", userRepository.getUserByID(id));
+		model.addAttribute("user", userRepository.findOne(id));
 		model.addAttribute("title", "查看用户");
 		return new ModelAndView("users/view", "userModel", model);
 	}
@@ -62,7 +66,7 @@ public class UserController {
 	 */
 	@GetMapping("/form")
 	public ModelAndView certeForms(Model model) {
-		model.addAttribute("user", new User());
+		model.addAttribute("user", new User(null,null,null));
 		model.addAttribute("title", "创建用户");
 		return new ModelAndView("users/form", "userModel", model);
 	}
@@ -72,8 +76,9 @@ public class UserController {
      * @return
      */
 	@PostMapping
+	//@Transactional
 	public ModelAndView certe(User user) {
-		user = userRepository.saveorUpdateUser(user);
+		user = userRepository.save(user);
 		return new ModelAndView("redirect:/users");//重定向list
 	}
 
@@ -84,8 +89,9 @@ public class UserController {
 	 * @return
 	 */
 	@GetMapping("/delete/{id}")
+	//@Transactional
 	public ModelAndView delete(@PathVariable("id") Long id, Model model) {
-		userRepository.deleteUser(id);
+		userRepository.delete(id);
 		return new ModelAndView("redirect:/users");//重定向list
 	}
 	
@@ -99,7 +105,7 @@ public class UserController {
 	@GetMapping("/modify/{id}")
 	public ModelAndView modify(@PathVariable("id") Long id, Model model) {
 		
-		model.addAttribute("user", userRepository.getUserByID(id));
+		model.addAttribute("user", userRepository.findOne(id));
 		model.addAttribute("title", "修改用户");
 		return new ModelAndView("users/form", "userModel", model);
 	}
