@@ -1,11 +1,11 @@
 package com.zzu.spring.boot.blog.service.impl;
 
-import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.zzu.spring.boot.blog.domain.User;
 import com.zzu.spring.boot.blog.repository.UserRepository;
@@ -22,7 +22,7 @@ import com.zzu.spring.boot.blog.service.UserService;
 public class UserServiceImpl implements UserService {
 
 	//dao层注入
-	@Resource// id
+	@Autowired// 
 	private UserRepository userRepository;
 	/**
 	 * <p>Title: saveOrUpateUser</p>  
@@ -85,7 +85,9 @@ public class UserServiceImpl implements UserService {
 	public Page<User> listUsersByNameLike(String name, Pageable pageable) {
 		// TODO Auto-generated method stub
 		//模糊查询
-		return userRepository.findByNameLike("%"+name+"%", pageable);
+		name = "%" + name + "%";
+		Page<User> users = userRepository.findByNameLike(name, pageable);
+		return users;
 	}
 
 }

@@ -35,5 +35,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @return User    返回类型  
 	 * @throws
 	 */
-	User findByUserName(String username);
+	User findByUsername(String username);
 }

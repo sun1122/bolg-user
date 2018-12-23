@@ -2,8 +2,6 @@ package com.zzu.spring.boot.blog.controller;
 
 import java.util.List;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.zzu.spring.boot.blog.domain.User;
-import com.zzu.spring.boot.blog.repository.UserRepository;
 import com.zzu.spring.boot.blog.service.UserService;
 import com.zzu.spring.boot.blog.util.ConstraintViolationExceptionHandler;
 import com.zzu.spring.boot.blog.vo.Response;
@@ -38,8 +34,8 @@ import com.zzu.spring.boot.blog.vo.Response;
 @RequestMapping("/users")
 public class UserController {
 	
-	//@Autowired
-	@Resource
+	@Autowired
+	//@Resource
 	private UserService userService;
 
 	/**
@@ -55,22 +51,21 @@ public class UserController {
 	 * @return ModelAndView    返回类型  
 	 * @throws
 	 */
-	@GetMapping
-    public ModelAndView list(@RequestParam(value="async",required=false) boolean async,
-            @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
-            @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
-            @RequestParam(value="name",required=false,defaultValue="") String name,
-            Model model) {
+	   @GetMapping
+	    public ModelAndView list(@RequestParam(value="async",required=false) boolean async,
+	            @RequestParam(value="pageIndex",required=false,defaultValue="0") int pageIndex,
+	            @RequestParam(value="pageSize",required=false,defaultValue="10") int pageSize,
+	            @RequestParam(value="name",required=false,defaultValue="") String name,
+	            Model model) {
 
-        Pageable pageable = new PageRequest(pageIndex, pageSize);
-        Page<User> page = userService.listUsersByNameLike(name, pageable);
-        List<User> list = page.getContent();    // 当前所在页面数据列表
+	        Pageable pageable = new PageRequest(pageIndex, pageSize);
+	        Page<User> page = userService.listUsersByNameLike(name, pageable);
+	        List<User> list = page.getContent();    // 当前所在页面数据列表
 
-        model.addAttribute("page", page);
-        model.addAttribute("userList", list);
-        //mainContainerRepleace 异步的话返回页面一部分内容
-        return new ModelAndView(async==true?"users/list :: #mainContainerRepleace":"users/list", "userModel", model);
-    }
+	        model.addAttribute("page", page);
+	        model.addAttribute("userList", list);
+	        return new ModelAndView(async==true?"users/list :: #mainContainerRepleace":"users/list", "userModel", model);
+	    }
 
 	/**
 	 * 
